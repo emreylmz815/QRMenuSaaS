@@ -1,0 +1,128 @@
+﻿@{
+    Layout = null;
+    var tenant = ViewBag.Tenant as QRMenuSaaS.Core.Entities.Tenant;
+    var theme = ViewBag.Theme as QRMenuSaaS.Core.Entities.Theme;
+    var categories = ViewBag.Categories as IEnumerable<QRMenuSaaS.Core.Entities.Category>;
+    var productGroups = ViewBag.Products as IEnumerable<IGrouping<int, QRMenuSaaS.Core.Entities.Product>>;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@tenant.Name - Menü</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary-color: @(theme?.PrimaryColor ?? "#e74c3c");
+            --secondary-color: @(theme?.SecondaryColor ?? "#34495e");
+            --font-family: '@(theme?.FontFamily ?? "Roboto")', sans-serif;
+        }
+        body { font-family: var(--font-family); background: #f8f9fa; }
+        .menu-header { background: var(--primary-color); color: white; padding: 2rem 0; text-align: center; }
+        @if (!string.IsNullOrEmpty(theme?.CoverImageUrl))
+        {
+            <text>.menu-header { background-image: url('@theme.CoverImageUrl'); background-size: cover; background-position: center; }</text>
+        }
+        .logo { max-height: 80px; margin-bottom: 1rem; }
+        .category-tabs { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .category-tabs .nav-link { color: var(--secondary-color); border-bottom: 3px solid transparent; }
+        .category-tabs .nav-link.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .product-card { transition: transform 0.2s; cursor: pointer; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .product-image { height: 200px; object-fit: cover; width: 100%; }
+        .product-price { color: var(--primary-color); font-size: 1.25rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="menu-header">
+        @if (!string.IsNullOrEmpty(theme?.LogoUrl))
+        {
+            <img src="@theme.LogoUrl" alt="@tenant.Name" class="logo" />
+        }
+        <h1>@tenant.Name</h1>
+        <p class="mb-0">Menümüz</p>
+    </div>
+
+    <!-- Kategori Tabs -->
+    <div class="category-tabs">
+        <div class="container">
+            <ul class="nav nav-tabs border-0" role="tablist">
+                @if (categories != null)
+                {
+                    var first = true;
+                    foreach (var category in categories)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link @(first ? "active" : "")" data-toggle="tab" href="#cat-@category.Id">
+                                @category.Name
+                            </a>
+                        </li>
+                        first = false;
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    <!-- Ürünler -->
+    <div class="container my-4">
+        <div class="tab-content">
+            @if (categories != null && productGroups != null)
+            {
+                var first = true;
+                foreach (var category in categories)
+                {
+                    var products = productGroups.FirstOrDefault(g => g.Key == category.Id);
+                    <div class="tab-pane fade @(first ? "show active" : "")" id="cat-@category.Id">
+                        <div class="row">
+                            @if (products != null)
+                            {
+                                foreach (var product in products)
+                                {
+                                    <div class="col-md-4 col-sm-6 mb-4">
+                                        <div class="card product-card h-100">
+                                            @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                            {
+                                                <img src="@product.ImageUrl" class="card-img-top product-image" alt="@product.Name" />
+                                            }
+                                            else
+                                            {
+                                                <div class="product-image bg-light d-flex align-items-center justify-content-center">
+                                                    <i class="fas fa-utensils fa-3x text-muted"></i>
+                                                </div>
+                                            }
+                                            <div class="card-body">
+                                                <h5 class="card-title">@product.Name</h5>
+                                                @if (!string.IsNullOrEmpty(product.Description))
+                                                {
+                                                    <p class="card-text text-muted small">@product.Description</p>
+                                                }
+                                                <p class="product-price mb-0">@product.Price.ToString("N2") ₺</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    first = false;
+                }
+            }
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p class="mb-0">
+            @tenant.Name - QR Menü<br />
+            <small>Powered by QR Menü SaaS</small>
+        </p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

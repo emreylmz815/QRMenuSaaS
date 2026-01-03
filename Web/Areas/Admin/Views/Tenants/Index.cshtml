@@ -1,0 +1,92 @@
+﻿@model IEnumerable<dynamic>
+    @{
+        ViewBag.Title = "Tenant Yönetimi";
+    }
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h2>Tenant'lar</h2>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Tenant</th>
+                        <th>Subdomain</th>
+                        <th>Plan</th>
+                        <th>Durum</th>
+                        <th>Ürün Sayısı</th>
+                        <th>Abonelik Bitiş</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tenant in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@tenant.name</strong><br />
+                                <small class="text-muted">@tenant.email</small>
+                            </td>
+                            <td>@tenant.subdomain</td>
+                            <td>@(tenant.plan_name ?? "N/A")</td>
+                            <td>
+                                @if (tenant.status == "active")
+                                {
+                                    <span class="badge badge-success">Aktif</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger">Askıda</span>
+                                }
+                            </td>
+                            <td>@tenant.product_count</td>
+                            <td>
+                                @if (tenant.subscription_end_date != null)
+                                {
+                                    @((DateTime)tenant.subscription_end_date).ToString("dd.MM.yyyy")
+                                                                }
+                                                    else
+                                                    {
+                                                        <span class="text-muted">-</span>
+                                                    }
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Details", new { id = tenant.id })" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                @if (tenant.status == "active")
+                                {
+                                    using (Html.BeginForm("Suspend", "Tenants", new { id = tenant.id }, FormMethod.Post, new { style = "display:inline;" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('Askıya almak istediğinize emin misiniz?')">
+                                            <i class="fas fa-pause"></i>
+                                        </button>
+                                    }
+                                }
+                                else
+                                {
+                                    using (Html.BeginForm("Resume", "Tenants", new { id = tenant.id }, FormMethod.Post, new { style = "display:inline;" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            <i class="fas fa-play"></i>
+                                        </button>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>

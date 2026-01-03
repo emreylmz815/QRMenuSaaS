@@ -1,0 +1,67 @@
+﻿ 
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>QR Kod Yazdır - @ViewBag.TenantName</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        .qr-container {
+            border: 2px solid #333;
+            padding: 30px;
+            display: inline-block;
+        }
+
+        .qr-code {
+            margin: 20px 0;
+        }
+
+        .tenant-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .url {
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        @@media print {
+            .no-print {
+                display: none;
+            }
+
+            .qr-container {
+                border: 2px solid #000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print" style="margin-bottom: 20px;">
+        <button onclick="window.print()" class="btn">Yazdır</button>
+        <button onclick="window.close()" class="btn">Kapat</button>
+    </div>
+
+    <div class="qr-container">
+        <div class="tenant-name">@ViewBag.TenantName</div>
+        <div class="qr-code">
+            <img src="data:image/png;base64,@ViewBag.QRCodeBase64" alt="QR Code" style="width: 400px; height: 400px;" />
+        </div>
+        <div class="url">@ViewBag.MenuUrl</div>
+        <p style="margin-top: 20px; font-size: 16px;">
+            QR kodu okutarak menümüzü görüntüleyebilirsiniz
+        </p>
+    </div>
+</body>
+</html>

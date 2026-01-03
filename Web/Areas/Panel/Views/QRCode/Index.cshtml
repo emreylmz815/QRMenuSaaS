@@ -1,0 +1,100 @@
+﻿// ============================================
+// Areas/Panel/Views/QRCode/Index.cshtml
+// ============================================
+@{
+    ViewBag.Title = "QR Kod";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">QR Kod Yönetimi</h5>
+            </div>
+            <div class="card-body text-center">
+                <h4 class="mb-4">@ViewBag.TenantName</h4>
+
+                <div class="mb-4">
+                    <img src="data:image/png;base64,@ViewBag.QRCodeBase64" alt="QR Code" style="max-width: 300px;" />
+                </div>
+
+                <div class="mb-4">
+                    <p class="lead">Menü URL:</p>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="@ViewBag.MenuUrl" id="menuUrl" readonly />
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard()">
+                                <i class="fas fa-copy"></i> Kopyala
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group" role="group">
+                    <a href="@Url.Action("Download")" class="btn btn-primary">
+                        <i class="fas fa-download"></i> İndir (PNG)
+                    </a>
+                    <a href="@Url.Action("Print")" target="_blank" class="btn btn-secondary">
+                        <i class="fas fa-print"></i> Yazdır
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Kullanım Önerileri</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <strong>Masalara Yerleştirin</strong><br />
+                        <small>Her masaya birer QR kod etiketi yerleştirin</small>
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <strong>Giriş/Duvar Afişi</strong><br />
+                        <small>Büyük boy baskı alıp duvara asın</small>
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <strong>Sosyal Medya</strong><br />
+                        <small>Instagram, Facebook'ta paylaşın</small>
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <strong>Kartvizit/Broşür</strong><br />
+                        <small>Basılı materyallere ekleyin</small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6>Baskı Önerileri</h6>
+                <ul class="small">
+                    <li>Minimum boyut: 3x3 cm</li>
+                    <li>Önerilen: 5x5 cm veya daha büyük</li>
+                    <li>Yüksek çözünürlük (300 DPI)</li>
+                    <li>Parlak kağıt tercih edin</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function copyToClipboard() {
+            var copyText = document.getElementById("menuUrl");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            alert("URL kopyalandı: " + copyText.value);
+        }
+    </script>
+}
