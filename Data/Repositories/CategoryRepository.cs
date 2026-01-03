@@ -43,6 +43,18 @@ namespace QRMenuSaaS.Data.Repositories
 				new { TenantId = tenantId, Slug = slug });
 		}
 
+		public async Task<int> GetCategoryCountByTenantAsync(int tenantId)
+		{
+			string sql = @"
+                SELECT COUNT(*) FROM categories 
+                WHERE tenant_id = @TenantId 
+                  AND is_deleted = FALSE";
+
+			return await _context.Connection.ExecuteScalarAsync<int>(
+				sql,
+				new { TenantId = tenantId });
+		}
+
 		public async Task<int> GetProductCountAsync(int categoryId, int tenantId)
 		{
 			string sql = @"
