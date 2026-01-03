@@ -1,21 +1,19 @@
 ﻿// ============================================
-// Areas/Admin/Controllers/AccountController.cs
+// Areas/Panel/Controllers/AccountController.cs
 // ============================================
-using Newtonsoft.Json; 
-using QRMenuSaaS.Web.Infrastructure;
-using QRMenuSaaS.Common.Helpers;
+using Newtonsoft.Json;
+using QRMenuSaaS.Common.Constants;
 using QRMenuSaaS.Core.DTOs;
-using QRMenuSaaS.Core.Entities;
+using QRMenuSaaS.Core.Enums;
 using QRMenuSaaS.Data;
-using QRMenuSaaS.Data.Repositories;
+using QRMenuSaaS.Services;
+using QRMenuSaaS.Web.Infrastructure;
 using System;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using QRMenuSaaS.Services;
-using QRMenuSaaS.Common.Constants;
 
-namespace QRMenuSaaS.Web.Areas.Admin.Controllers
+namespace QRMenuSaaS.Web.Areas.Panel.Controllers
 {
 	public class AccountController : Controller
 	{
@@ -30,11 +28,12 @@ namespace QRMenuSaaS.Web.Areas.Admin.Controllers
 		[AllowAnonymous]
 		public ActionResult Login()
 		{
-			var cookie = Request.Cookies[AppConstants.SuperAdminCookieName];
+			var cookie = Request.Cookies[AppConstants.TenantCookieName];
 			if (Request.IsAuthenticated && cookie != null)
 			{
 				return RedirectToAction("Index", "Dashboard");
 			}
+
 			return View();
 		}
 
@@ -48,10 +47,16 @@ namespace QRMenuSaaS.Web.Areas.Admin.Controllers
 				return View(model);
 			}
 
-			// Super admin girişi (tenantId = null)
-			var result = _authService.LoginAsync(model.Email, model.Password, null).Result;
+			var tenantId = HttpContext.Items["TenantId"] as int?;
+			if (!tenantId.HasValue)
+			{
+				ModelState.AddModelError("", "Bu alan adı için geçerli bir işletme bulunamadı.");
+				return View(model);
+			}
 
-			if (!result.Success || result.User.Role != "superadmin")
+			var result = _authService.LoginAsync(model.Email, model.Password, tenantId).Result;
+
+			if (!result.Success || (result.User.Role != UserRole.TenantAdmin && result.User.Role != UserRole.TenantEditor))
 			{
 				ModelState.AddModelError("", "Geçersiz giriş bilgileri");
 				return View(model);
@@ -60,13 +65,13 @@ namespace QRMenuSaaS.Web.Areas.Admin.Controllers
 			var userData = new UserCookieData
 			{
 				UserId = result.User.Id,
-				TenantId = null,
+				TenantId = tenantId,
 				Email = result.User.Email,
 				FullName = result.User.FullName,
 				Role = result.User.Role
 			};
 
-			var cookie = new HttpCookie(AppConstants.SuperAdminCookieName)
+			var cookie = new HttpCookie(AppConstants.TenantCookieName)
 			{
 				Value = JsonConvert.SerializeObject(userData),
 				Expires = model.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddHours(8),
@@ -76,6 +81,7 @@ namespace QRMenuSaaS.Web.Areas.Admin.Controllers
 
 			Response.Cookies.Add(cookie);
 			FormsAuthentication.SetAuthCookie(result.User.Email, model.RememberMe);
+
 			return RedirectToAction("Index", "Dashboard");
 		}
 
@@ -83,7 +89,7 @@ namespace QRMenuSaaS.Web.Areas.Admin.Controllers
 		public ActionResult Logout()
 		{
 			FormsAuthentication.SignOut();
-			var cookie = new HttpCookie(AppConstants.SuperAdminCookieName)
+			var cookie = new HttpCookie(AppConstants.TenantCookieName)
 			{
 				Expires = DateTime.Now.AddDays(-1)
 			};
