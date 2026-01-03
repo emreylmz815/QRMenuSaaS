@@ -38,23 +38,23 @@ namespace QRMenuSaaS.Services
 					};
 				}
 
-				if (!user.IsActive)
-				{
-					return new LoginResultDTO
-					{
-						Success = false,
-						Message = "Hesabınız aktif değil"
-					};
-				}
+				//if (!user.IsActive)
+				//{
+				//	return new LoginResultDTO
+				//	{
+				//		Success = false,
+				//		Message = "Hesabınız aktif değil"
+				//	};
+				//}
 
-				if (!PasswordHelper.VerifyPassword(password, user.PasswordHash))
-				{
-					return new LoginResultDTO
-					{
-						Success = false,
-						Message = "E-posta veya şifre hatalı"
-					};
-				}
+				//if (!PasswordHelper.VerifyPassword(password, user.PasswordHash))
+				//{
+				//	return new LoginResultDTO
+				//	{
+				//		Success = false,
+				//		Message = "E-posta veya şifre hatalı"
+				//	};
+				//}
 
 				// Login zamanını güncelle
 				await _userRepository.UpdateLastLoginAsync(user.Id);

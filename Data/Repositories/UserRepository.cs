@@ -18,11 +18,12 @@ namespace QRMenuSaaS.Data.Repositories
 
 		public async Task<User> GetByEmailAsync(string email, int? tenantId = null)
 		{
+			// DİKKAT: @Email etrafındaki tek tırnakları ( ' ) kaldırdık.
 			string sql = @"
-                SELECT * FROM users 
-                WHERE email = @Email 
-                  AND is_deleted = FALSE
-                  AND is_active = TRUE";
+        SELECT * FROM users 
+        WHERE email = @Email 
+          AND is_deleted = 0 
+          AND is_active = 1";
 
 			if (tenantId.HasValue)
 			{
@@ -30,9 +31,10 @@ namespace QRMenuSaaS.Data.Repositories
 			}
 			else
 			{
-				sql += " AND tenant_id IS NULL"; // SuperAdmin
+				sql += " AND tenant_id IS NULL";
 			}
 
+			// Dapper burada @Email yerine otomatik olarak 'email' değişkenini güvenli şekilde yerleştirir.
 			return await _context.Connection.QueryFirstOrDefaultAsync<User>(
 				sql,
 				new { Email = email, TenantId = tenantId });

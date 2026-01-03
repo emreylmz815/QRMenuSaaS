@@ -30,11 +30,12 @@ namespace QRMenuSaaS.Web
 
 			// 3. Genel Varsayılan Rota (controller/action/id)
 			routes.MapRoute(
-				name: "Default",
-				url: "{controller}/{action}/{id}",
-				defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-				namespaces: new[] { "QRMenuSaaS.Web.Controllers" }
-			);
+					name: "Default",
+					url: "{controller}/{action}/{id}",
+					defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+					// ÖNEMLİ: Sadece ana klasördeki controller'lara bakmasını söyleyin
+					namespaces: new[] { "QRMenuSaaS.Web.Controllers" }
+				);
 		}
 	}
 }
