@@ -12,14 +12,15 @@ namespace QRMenuSaaS.Web
 		{
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-			// Public menü routes (tenant subdomain'lerde çalışır)
+			// 1. Ana Sayfa Rotası (localhost:44391 direkt buraya düşer)
 			routes.MapRoute(
-				name: "PublicMenu",
+				name: "PublicHome",
 				url: "",
-				defaults: new { controller = "Menu", action = "Index" },
+				defaults: new { controller = "Home", action = "Index" },
 				namespaces: new[] { "QRMenuSaaS.Web.Controllers" }
 			);
 
+			// 2. Kategori Rotası
 			routes.MapRoute(
 				name: "PublicMenuCategory",
 				url: "category/{slug}",
@@ -27,6 +28,7 @@ namespace QRMenuSaaS.Web
 				namespaces: new[] { "QRMenuSaaS.Web.Controllers" }
 			);
 
+			// 3. Genel Varsayılan Rota (controller/action/id)
 			routes.MapRoute(
 				name: "Default",
 				url: "{controller}/{action}/{id}",

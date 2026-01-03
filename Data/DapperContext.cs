@@ -1,11 +1,7 @@
-﻿// ============================================
-// QRMenuSaaS.Data/DapperContext.cs
-// ============================================
-using NLog.Internal;
-using Npgsql;
-using System;
+﻿using System;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient; // SQL Server için gerekli kütüphane
 
 namespace QRMenuSaaS.Data
 {
@@ -16,6 +12,7 @@ namespace QRMenuSaaS.Data
 
 		public DapperContext()
 		{
+			// Web.config'deki DefaultConnection'ı okur
 			_connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 		}
 
@@ -28,9 +25,10 @@ namespace QRMenuSaaS.Data
 		{
 			get
 			{
-				if (_connection == null || _connection.State != ConnectionState.Open)
+				// NpgsqlConnection yerine SqlConnection kullanıyoruz
+				if (_connection == null || _connection.State == ConnectionState.Closed)
 				{
-					_connection = new NpgsqlConnection(_connectionString);
+					_connection = new SqlConnection(_connectionString);
 					_connection.Open();
 				}
 				return _connection;
@@ -39,10 +37,14 @@ namespace QRMenuSaaS.Data
 
 		public void Dispose()
 		{
-			if (_connection != null && _connection.State == ConnectionState.Open)
+			if (_connection != null)
 			{
-				_connection.Close();
+				if (_connection.State != ConnectionState.Closed)
+				{
+					_connection.Close();
+				}
 				_connection.Dispose();
+				_connection = null;
 			}
 		}
 	}

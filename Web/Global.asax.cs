@@ -1,9 +1,8 @@
-// ============================================
-// QRMenuSaaS.Web/Global.asax.cs
-// ============================================
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Optimization; // 1. Bu namespace'i eklediðinizden emin olun
 using System.Web.Routing;
+using Web;
 
 namespace QRMenuSaaS.Web
 {
@@ -15,13 +14,16 @@ namespace QRMenuSaaS.Web
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
 
+			// 2. EKSÝK OLAN KRÝTÝK SATIR BURASI:
+			BundleConfig.RegisterBundles(BundleTable.Bundles);
+
 			// Hangfire baþlatma (opsiyonel)
 			// HangfireConfig.Configure();
 		}
 
 		protected void Application_BeginRequest()
 		{
-			// Her request'te tenant'ý çözümle ve context'e ekle
+			// Mevcut tenant kodlarýnýz...
 			var context = new QRMenuSaaS.Data.DapperContext();
 			var tenantResolver = new Infrastructure.TenantResolver(context);
 			var tenant = tenantResolver.ResolveTenant();
