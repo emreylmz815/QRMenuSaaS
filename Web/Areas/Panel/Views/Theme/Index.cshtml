@@ -6,11 +6,18 @@
     ViewBag.Title = "Tema Ayarları";
 }
 
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Tema Ayarları</h2>
+        <p class="page-subtitle">Marka kimliğinizi yansıtan bir menü oluşturun</p>
+    </div>
+</div>
+
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-lg-8 mb-4">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Tema Özelleştirme</h5>
+                Tema Özelleştirme
             </div>
             <div class="card-body">
                 @if (TempData["Success"] != null)
@@ -82,14 +89,14 @@
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-lg-4">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Önizleme</h5>
+                Önizleme
             </div>
             <div class="card-body">
-                <div id="preview" style="border: 1px solid #ddd; padding: 20px; border-radius: 5px;">
-                    <div style="background: @Model.PrimaryColor; color: white; padding: 15px; text-align: center; border-radius: 5px;">
+                <div id="preview" class="p-4" style="border: 1px solid #e2e8f0; border-radius: 16px; background: #f8fafc;">
+                    <div style="background: @Model.PrimaryColor; color: white; padding: 15px; text-align: center; border-radius: 12px;">
                         <h4 style="font-family: @Model.FontFamily, sans-serif; margin: 0;">Menü Başlığı</h4>
                     </div>
                     <div style="margin-top: 15px; font-family: @Model.FontFamily, sans-serif;">
@@ -111,8 +118,7 @@
 
 @section scripts {
     <script>
-        // Canlı önizleme
-        $('input[type="color"], select[name="FontFamily"]').on('change input', function() {
+        $('input[type="color"], select[name="FontFamily"]').on('change input', function () {
             var primaryColor = $('#PrimaryColor').val();
             var secondaryColor = $('#SecondaryColor').val();
             var fontFamily = $('#FontFamily').val();

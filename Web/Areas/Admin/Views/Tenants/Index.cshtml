@@ -1,22 +1,27 @@
 ﻿@model IEnumerable<dynamic>
-    @{
-        ViewBag.Title = "Tenant Yönetimi";
-    }
+@{
+    ViewBag.Title = "Tenant Yönetimi";
+}
 
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <h2>Tenant'lar</h2>
-        </div>
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Tenant'lar</h2>
+        <p class="page-subtitle">Tüm müşterileri tek ekrandan yönetin</p>
     </div>
+</div>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success">@TempData["Success"]</div>
-    }
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["Success"]
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+}
 
-    <div class="card">
-        <div class="card-body">
-            <table class="table table-hover">
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
                 <thead>
                     <tr>
                         <th>Tenant</th>
@@ -41,11 +46,11 @@
                             <td>
                                 @if (tenant.status == "active")
                                 {
-                                    <span class="badge badge-success">Aktif</span>
+                                    <span class="badge badge-soft-success">Aktif</span>
                                 }
                                 else
                                 {
-                                    <span class="badge badge-danger">Askıda</span>
+                                    <span class="badge badge-soft-danger">Askıda</span>
                                 }
                             </td>
                             <td>@tenant.product_count</td>
@@ -53,11 +58,11 @@
                                 @if (tenant.subscription_end_date != null)
                                 {
                                     @((DateTime)tenant.subscription_end_date).ToString("dd.MM.yyyy")
-                                                                }
-                                                    else
-                                                    {
-                                                        <span class="text-muted">-</span>
-                                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
                             </td>
                             <td>
                                 <a href="@Url.Action("Details", new { id = tenant.id })" class="btn btn-sm btn-info">
@@ -90,3 +95,4 @@
             </table>
         </div>
     </div>
+</div>

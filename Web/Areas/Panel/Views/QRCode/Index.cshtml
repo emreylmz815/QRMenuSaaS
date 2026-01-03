@@ -5,21 +5,28 @@
     ViewBag.Title = "QR Kod";
 }
 
+<div class="page-header">
+    <div>
+        <h2 class="page-title">QR Kod Yönetimi</h2>
+        <p class="page-subtitle">Menü bağlantınızı hızlıca paylaşın</p>
+    </div>
+</div>
+
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-lg-8 mb-4">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">QR Kod Yönetimi</h5>
+                QR Kodunuz
             </div>
             <div class="card-body text-center">
                 <h4 class="mb-4">@ViewBag.TenantName</h4>
 
                 <div class="mb-4">
-                    <img src="data:image/png;base64,@ViewBag.QRCodeBase64" alt="QR Code" style="max-width: 300px;" />
+                    <img src="data:image/png;base64,@ViewBag.QRCodeBase64" alt="QR Code" style="max-width: 300px;" class="img-fluid" />
                 </div>
 
                 <div class="mb-4">
-                    <p class="lead">Menü URL:</p>
+                    <p class="lead mb-2">Menü URL</p>
                     <div class="input-group">
                         <input type="text" class="form-control" value="@ViewBag.MenuUrl" id="menuUrl" readonly />
                         <div class="input-group-append">
@@ -42,13 +49,13 @@
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card">
+    <div class="col-lg-4">
+        <div class="card mb-3">
             <div class="card-header">
-                <h5 class="mb-0">Kullanım Önerileri</h5>
+                Kullanım Önerileri
             </div>
             <div class="card-body">
-                <ul class="list-unstyled">
+                <ul class="list-unstyled mb-0">
                     <li class="mb-3">
                         <i class="fas fa-check-circle text-success"></i>
                         <strong>Masalara Yerleştirin</strong><br />
@@ -64,7 +71,7 @@
                         <strong>Sosyal Medya</strong><br />
                         <small>Instagram, Facebook'ta paylaşın</small>
                     </li>
-                    <li class="mb-3">
+                    <li>
                         <i class="fas fa-check-circle text-success"></i>
                         <strong>Kartvizit/Broşür</strong><br />
                         <small>Basılı materyallere ekleyin</small>
@@ -73,10 +80,10 @@
             </div>
         </div>
 
-        <div class="card mt-3">
+        <div class="card">
             <div class="card-body">
-                <h6>Baskı Önerileri</h6>
-                <ul class="small">
+                <h6 class="mb-3">Baskı Önerileri</h6>
+                <ul class="small text-muted mb-0">
                     <li>Minimum boyut: 3x3 cm</li>
                     <li>Önerilen: 5x5 cm veya daha büyük</li>
                     <li>Yüksek çözünürlük (300 DPI)</li>
