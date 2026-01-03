@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Dashboard</h2>
+        <p class="page-subtitle">İşletme performansınızın hızlı özeti</p>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["Success"]
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+}
+
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card stat-card">
+            <div class="card-body d-flex align-items-center">
+                <div class="stat-icon bg-primary text-white">
+                    <i class="fas fa-list"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Kategoriler</div>
+                    <div class="stat-value">@ViewBag.CategoryCount</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card stat-card">
+            <div class="card-body d-flex align-items-center">
+                <div class="stat-icon bg-success text-white">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Ürünler</div>
+                    <div class="stat-value">@ViewBag.ProductCount</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="mb-3">Abonelik Durumu</h5>
+                @if (ViewBag.Subscription != null)
+                {
+                    <div class="d-flex flex-wrap align-items-center">
+                        <span class="badge badge-soft-primary mr-3 mb-2">@ViewBag.Subscription.PlanName</span>
+                        <span class="text-muted mr-3 mb-2">Durum: <strong>@ViewBag.SubscriptionStatus</strong></span>
+                        <span class="text-muted mb-2">Kalan Gün: <strong>@ViewBag.DaysRemaining</strong></span>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-danger mb-0">Aktif abonelik bulunamadı</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        Hızlı Erişim
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <a href="@Url.Action("Index", "Categories")" class="list-group-item list-group-item-action h-100">
+                    <strong>Kategori Yönetimi</strong>
+                    <p class="text-muted mb-0">Menü kategorilerinizi düzenleyin</p>
+                </a>
+            </div>
+            <div class="col-md-4 mb-3">
+                <a href="@Url.Action("Index", "Products")" class="list-group-item list-group-item-action h-100">
+                    <strong>Ürün Yönetimi</strong>
+                    <p class="text-muted mb-0">Ürünlerinizi ekleyin ve düzenleyin</p>
+                </a>
+            </div>
+            <div class="col-md-4 mb-3">
+                <a href="@Url.Action("Index", "Theme")" class="list-group-item list-group-item-action h-100">
+                    <strong>Tema Ayarları</strong>
+                    <p class="text-muted mb-0">Menü görünümünüzü özelleştirin</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
