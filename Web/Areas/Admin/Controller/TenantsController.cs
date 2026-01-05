@@ -26,10 +26,25 @@ namespace QRMenuSaaS.Web.Areas.Admin.Controllers
 		public ActionResult Index()
 		{
 			var tenants = _context.Connection.Query<dynamic>(@"
-    SELECT t.*, td.subdomain, s.status as subscription_status
+    SELECT t.*, 
+           td.subdomain, 
+           s.status as subscription_status,
+           s.end_date as subscription_end_date,
+           p.name as plan_name,
+           (
+               SELECT COUNT(*) 
+               FROM products 
+               WHERE tenant_id = t.id AND is_deleted = 0
+           ) as product_count,
+           (
+               SELECT COUNT(*) 
+               FROM categories 
+               WHERE tenant_id = t.id AND is_deleted = 0
+           ) as category_count
     FROM tenants t
     LEFT JOIN tenant_domains td ON t.id = td.tenant_id AND td.is_primary = 1
     LEFT JOIN subscriptions s ON t.id = s.tenant_id AND s.status = 'active'
+    LEFT JOIN plans p ON s.plan_id = p.id
     WHERE t.is_deleted = 0
     ORDER BY t.created_at DESC
 ").ToList();

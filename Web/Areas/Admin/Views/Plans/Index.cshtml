@@ -1,0 +1,62 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewBag.Title = "Plan Yönetimi";
+}
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Planlar</h2>
+        <p class="page-subtitle">Abonelik paketlerini görüntüleyin</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Plan</th>
+                        <th>Fiyat</th>
+                        <th>Periyot</th>
+                        <th>Limitler</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var plan in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@plan.name</strong><br />
+                                <small class="text-muted">@plan.description</small>
+                            </td>
+                            <td>@plan.price @plan.currency</td>
+                            <td>@plan.billing_period</td>
+                            <td>
+                                Ürün: @plan.max_products<br />
+                                Kategori: @plan.max_categories
+                            </td>
+                            <td>
+                                @if (plan.is_active)
+                                {
+                                    <span class="badge badge-soft-success">Aktif</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-soft-danger">Pasif</span>
+                                }
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-info" href="@Url.Action("Details", new { id = plan.id })">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
