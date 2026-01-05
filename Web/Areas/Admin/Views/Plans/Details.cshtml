@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Plan Detayı";
+    var plan = ViewBag.Plan;
+}
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">@plan?.name</h2>
+        <p class="page-subtitle">Plan detaylarını görüntüleyin</p>
+    </div>
+    <div>
+        <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left mr-1"></i> Planlara Dön
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="mb-3">Genel Bilgiler</h5>
+                <p><strong>Slug:</strong> @plan?.slug</p>
+                <p><strong>Fiyat:</strong> @plan?.price @plan?.currency</p>
+                <p><strong>Periyot:</strong> @plan?.billing_period</p>
+                <p><strong>Durum:</strong>
+                    @if (plan != null && plan.is_active)
+                    {
+                        <span class="badge badge-soft-success">Aktif</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-soft-danger">Pasif</span>
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="mb-3">Limitler</h5>
+                <p><strong>Ürün Limiti:</strong> @plan?.max_products</p>
+                <p><strong>Kategori Limiti:</strong> @plan?.max_categories</p>
+                <p><strong>Ürün Görsel Limiti:</strong> @plan?.max_images_per_product</p>
+                <p><strong>Sıra:</strong> @plan?.sort_order</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="mb-3">Açıklama</h5>
+                <p class="mb-0">@plan?.description</p>
+            </div>
+        </div>
+    </div>
+</div>
