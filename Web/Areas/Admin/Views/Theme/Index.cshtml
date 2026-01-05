@@ -1,0 +1,132 @@
+﻿// ============================================
+// Areas/Panel/Views/Theme/Index.cshtml
+// ============================================
+@model QRMenuSaaS.Core.DTOs.ThemeDTO
+@{
+    ViewBag.Title = "Tema Ayarları";
+}
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Tema Ayarları</h2>
+        <p class="page-subtitle">Marka kimliğinizi yansıtan bir menü oluşturun</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                Tema Özelleştirme
+            </div>
+            <div class="card-body">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show">
+                        @TempData["Success"]
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+                }
+
+                @using (Html.BeginForm("Index", "Theme", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PrimaryColor, "Ana Renk")
+                        @Html.TextBoxFor(m => m.PrimaryColor, new { @class = "form-control", type = "color" })
+                        @Html.ValidationMessageFor(m => m.PrimaryColor, "", new { @class = "text-danger" })
+                        <small class="form-text text-muted">Menü başlığı ve vurgulu elementler</small>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SecondaryColor, "İkincil Renk")
+                        @Html.TextBoxFor(m => m.SecondaryColor, new { @class = "form-control", type = "color" })
+                        @Html.ValidationMessageFor(m => m.SecondaryColor, "", new { @class = "text-danger" })
+                        <small class="form-text text-muted">Alt başlıklar ve yazılar</small>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FontFamily, "Font Ailesi")
+                        @Html.DropDownListFor(m => m.FontFamily,
+                            new SelectList(new[] { "Roboto", "Poppins", "Open Sans", "Lato", "Montserrat" }),
+                            new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.FontFamily, "", new { @class = "text-danger" })
+                    </div>
+
+                    <hr />
+
+                    <div class="form-group">
+                        <label>Logo</label>
+                        @if (!string.IsNullOrEmpty(Model.LogoUrl))
+                        {
+                            <div class="mb-2">
+                                <img src="@Model.LogoUrl" alt="Logo" style="max-height: 100px;" class="img-thumbnail" />
+                            </div>
+                        }
+                        <input type="file" name="logoFile" class="form-control-file" accept="image/*" />
+                        <small class="form-text text-muted">Önerilen: 500x200px, PNG/JPG</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Kapak Görseli</label>
+                        @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+                        {
+                            <div class="mb-2">
+                                <img src="@Model.CoverImageUrl" alt="Cover" style="max-width: 100%; max-height: 150px;" class="img-thumbnail" />
+                            </div>
+                        }
+                        <input type="file" name="coverFile" class="form-control-file" accept="image/*" />
+                        <small class="form-text text-muted">Önerilen: 1920x600px, JPG</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> Kaydet
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                Önizleme
+            </div>
+            <div class="card-body">
+                <div id="preview" class="p-4" style="border: 1px solid #e2e8f0; border-radius: 16px; background: #f8fafc;">
+                    <div style="background: @Model.PrimaryColor; color: white; padding: 15px; text-align: center; border-radius: 12px;">
+                        <h4 style="font-family: @Model.FontFamily, sans-serif; margin: 0;">Menü Başlığı</h4>
+                    </div>
+                    <div style="margin-top: 15px; font-family: @Model.FontFamily, sans-serif;">
+                        <p style="color: @Model.SecondaryColor; margin: 10px 0;">
+                            <strong>Kategori Başlığı</strong>
+                        </p>
+                        <p style="margin: 5px 0;">Ürün Adı <span style="color: @Model.PrimaryColor; float: right;">₺125.00</span></p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a href="/" target="_blank" class="btn btn-sm btn-secondary btn-block">
+                        <i class="fas fa-external-link-alt"></i> Menüyü Görüntüle
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $('input[type="color"], select[name="FontFamily"]').on('change input', function () {
+            var primaryColor = $('#PrimaryColor').val();
+            var secondaryColor = $('#SecondaryColor').val();
+            var fontFamily = $('#FontFamily').val();
+
+            $('#preview > div:first').css('background', primaryColor);
+            $('#preview p:first').css('color', secondaryColor);
+            $('#preview span').css('color', primaryColor);
+            $('#preview').css('font-family', fontFamily + ', sans-serif');
+        });
+    </script>
+}

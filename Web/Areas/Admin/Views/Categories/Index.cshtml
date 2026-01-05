@@ -1,0 +1,82 @@
+﻿@model IEnumerable<QRMenuSaaS.Core.DTOs.CategoryDTO>
+@{
+    ViewBag.Title = "Kategoriler";
+}
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Kategoriler</h2>
+        <p class="page-subtitle">Menü kategorilerinizi yönetin</p>
+    </div>
+    <div>
+        <a href="@Url.Action("Create")" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Yeni Kategori
+        </a>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["Success"]
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        @TempData["Error"]
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Sıra</th>
+                        <th>Kategori Adı</th>
+                        <th>Ürün Sayısı</th>
+                        <th>Durum</th>
+                        <th width="150">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Model)
+                    {
+                        <tr>
+                            <td>@category.SortOrder</td>
+                            <td><strong>@category.Name</strong></td>
+                            <td>@category.ProductCount ürün</td>
+                            <td>
+                                @if (category.IsActive)
+                                {
+                                    <span class="badge badge-soft-success">Aktif</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-soft-secondary">Pasif</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", new { id = category.Id })" class="btn btn-sm btn-info">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                @using (Html.BeginForm("Delete", "Categories", new { id = category.Id }, FormMethod.Post, new { style = "display:inline;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Silmek istediğinize emin misiniz?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
